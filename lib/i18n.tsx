@@ -8,6 +8,7 @@ const dict = {
   en: {
     nav_pricing: 'Pricing',
     nav_faq: 'FAQ',
+    nav_import: 'Import CSV',
     nav_demo: 'Try a demo',
     brand: 'MirrorMoney',
     hero_title: 'See what your spending could’ve become.',
@@ -55,11 +56,26 @@ const dict = {
     current_factor: 'Current factor',
     contact: 'Contact',
     privacy: 'Privacy',
-    terms: 'Terms'
+    terms: 'Terms',
+    import_title: 'Import transactions (CSV)',
+    import_desc: 'Upload a CSV with date, description, amount — then pick a scenario to see your “what-if” result.',
+    csv_format: 'Expected CSV header: date,description,amount (YYYY-MM-DD, positive amount in €)',
+    choose_file: 'Choose CSV file',
+    scenario: 'Scenario',
+    as_of: 'As of',
+    process: 'Process CSV',
+    clear: 'Clear',
+    total_spent: 'Total spent',
+    total_hyp: 'Hypothetical value',
+    table_date: 'Date',
+    table_desc: 'Description',
+    table_amt: 'Amount',
+    result: 'Result'
   },
   de: {
     nav_pricing: 'Preise',
     nav_faq: 'FAQ',
+    nav_import: 'CSV importieren',
     nav_demo: 'Demo testen',
     brand: 'MirrorMoney',
     hero_title: 'Sieh, was aus deinen Ausgaben hätte werden können.',
@@ -100,14 +116,28 @@ const dict = {
     demo_title: 'Interaktive Demo',
     demo_desc: 'Diese Demo nutzt Beispieldaten. Verändere unten den „Wachstums“-Regler und sieh dir an, wie ein Schatten-Portfolio ohne Risiko aussehen könnte.',
     back: '← Zurück',
-    shadow: 'Schatten‑Portfolio (Demo)',
+    shadow: 'Schatten-Portfolio (Demo)',
     based_on: 'Basierend auf',
     of_past: 'an früheren Käufen',
     adjust_growth: 'Wachstumsfaktor anpassen',
     current_factor: 'Aktueller Faktor',
     contact: 'Kontakt',
     privacy: 'Datenschutz',
-    terms: 'Impressum'
+    terms: 'Impressum',
+    import_title: 'Transaktionen importieren (CSV)',
+    import_desc: 'Lade eine CSV mit Datum, Beschreibung, Betrag hoch – wähle dann ein Szenario für dein „What-if“-Ergebnis.',
+    csv_format: 'Erwarteter CSV-Header: date,description,amount (YYYY-MM-DD, positiver Betrag in €)',
+    choose_file: 'CSV auswählen',
+    scenario: 'Szenario',
+    as_of: 'Stichtag',
+    process: 'CSV verarbeiten',
+    clear: 'Zurücksetzen',
+    total_spent: 'Summe Ausgaben',
+    total_hyp: 'Hypothetischer Wert',
+    table_date: 'Datum',
+    table_desc: 'Beschreibung',
+    table_amt: 'Betrag',
+    result: 'Ergebnis'
   }
 } as const
 
@@ -122,7 +152,6 @@ const LangContext = createContext<{
 export function LanguageProvider({children}: {children: React.ReactNode}) {
   const [lang, setLang] = useState<Lang>('en')
 
-  // on first load, try localStorage or browser language
   useEffect(()=>{
     const saved = typeof window !== 'undefined' ? localStorage.getItem('lang') as Lang | null : null
     if (saved) setLang(saved)
@@ -147,7 +176,4 @@ export function useLanguage(){
   if (!ctx) throw new Error('useLanguage must be used within LanguageProvider')
   return ctx
 }
-
-export function useT(){
-  return useLanguage().t
-}
+export function useT(){ return useLanguage().t }

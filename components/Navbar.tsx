@@ -25,10 +25,10 @@ export default function Navbar() {
         <div className="flex items-center gap-1">
           <NavLink href="/pricing">{t('nav_pricing')}</NavLink>
           <NavLink href="/faq">{t('nav_faq')}</NavLink>
-          <a href="#try" className="ml-2 inline-flex items-center gap-2 bg-brand-accent text-slate-900 hover:opacity-90 px-3 py-2 rounded-md text-sm font-semibold">
+          <NavLink href="/import">{t('nav_import')}</NavLink>
+          <a href="/demo" className="ml-2 inline-flex items-center gap-2 bg-brand-accent text-slate-900 hover:opacity-90 px-3 py-2 rounded-md text-sm font-semibold">
             {t('nav_demo')}
           </a>
-          {/* language flags */}
           <div className="ml-3 flex items-center gap-1">
             <button aria-label="English" title="English" onClick={()=>setLang('en')} className="px-2 py-1 rounded hover:bg-white/10 text-lg">🇬🇧</button>
             <button aria-label="Deutsch" title="Deutsch" onClick={()=>setLang('de')} className="px-2 py-1 rounded hover:bg-white/10 text-lg">🇩🇪</button>

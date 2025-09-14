@@ -1,19 +1,26 @@
-# MirrorMoney landing — i18n flags (EN/DE)
+# MirrorMoney landing — EN/DE + CSV Import (demo model)
 
-This version adds a **language toggle** (🇬🇧 / 🇩🇪) in the top-right and uses `.cjs` configs so it runs smoothly on Windows.
+This build adds an **/import** page to upload a CSV and compute a simple "what-if" result using a deterministic demo price model (no external APIs).
 
 ## Run locally
-```bash
+```
 npm install
 npm run dev
 ```
 Open http://localhost:3000
 
-## Change default language
-The site auto-detects German browser language on first visit and remembers your choice in `localStorage`. You can always click the flags to switch.
+## CSV format
+Header row required:
+```
+date,description,amount
+2025-01-15,Coffee + snack,8.50
+...
+```
+- Dates: YYYY-MM-DD
+- Amounts: positive euros
+
+## Notes
+- Price model is a toy demo (education only), not real market data.
+- To deploy privately, use Vercel and keep `public/robots.txt` as-is (no indexing).
 
 — 2025-09-14
-"# money-mirror-landing" 
-"# money-mirror-landing" 
-"# money-mirror-landing" 
-"# money-mirror-landing" 
