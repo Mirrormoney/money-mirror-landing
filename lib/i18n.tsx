@@ -57,20 +57,9 @@ const dict = {
     contact: 'Contact',
     privacy: 'Privacy',
     terms: 'Terms',
-    import_title: 'Import transactions (CSV)',
-    import_desc: 'Upload a CSV with date, description, amount — then pick a scenario to see your “what-if” result.',
-    csv_format: 'Expected CSV header: date,description,amount (YYYY-MM-DD, positive amount in €)',
-    choose_file: 'Choose CSV file',
-    scenario: 'Scenario',
-    as_of: 'As of',
-    process: 'Process CSV',
-    clear: 'Clear',
-    total_spent: 'Total spent',
-    total_hyp: 'Hypothetical value',
-    table_date: 'Date',
-    table_desc: 'Description',
-    table_amt: 'Amount',
-    result: 'Result'
+    impressum: 'Impressum (Legal Notice)',
+    datenschutz: 'Privacy (Datenschutz)',
+    disclaimer: 'No Investment Advice'
   },
   de: {
     nav_pricing: 'Preise',
@@ -124,20 +113,9 @@ const dict = {
     contact: 'Kontakt',
     privacy: 'Datenschutz',
     terms: 'Impressum',
-    import_title: 'Transaktionen importieren (CSV)',
-    import_desc: 'Lade eine CSV mit Datum, Beschreibung, Betrag hoch – wähle dann ein Szenario für dein „What-if“-Ergebnis.',
-    csv_format: 'Erwarteter CSV-Header: date,description,amount (YYYY-MM-DD, positiver Betrag in €)',
-    choose_file: 'CSV auswählen',
-    scenario: 'Szenario',
-    as_of: 'Stichtag',
-    process: 'CSV verarbeiten',
-    clear: 'Zurücksetzen',
-    total_spent: 'Summe Ausgaben',
-    total_hyp: 'Hypothetischer Wert',
-    table_date: 'Datum',
-    table_desc: 'Beschreibung',
-    table_amt: 'Betrag',
-    result: 'Ergebnis'
+    impressum: 'Impressum',
+    datenschutz: 'Datenschutz',
+    disclaimer: 'Keine Anlageberatung'
   }
 } as const
 
