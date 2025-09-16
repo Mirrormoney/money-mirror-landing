@@ -94,10 +94,10 @@ const DICT = {
 
 // Prefer project's i18n if available; otherwise use a local fallback that tracks localStorage('lang')
 function useLocalI18n() {
-  const getLang = () => {
-    if (typeof window === 'undefined') return 'en' as const;
+  const getLang = (): 'en' | 'de' => {
+    if (typeof window === 'undefined') return 'en';
     const v = (localStorage.getItem('lang') || 'en').toLowerCase();
-    return (v === 'de' ? 'de' : 'en') as const;
+    return v === 'de' ? 'de' : 'en';
   };
   const [lang, setLang] = React.useState<'en' | 'de'>(getLang);
 
@@ -110,33 +110,13 @@ function useLocalI18n() {
         setLang(next);
       }
     };
-
-    // Monkey‑patch setItem/removeItem so in‑tab updates apply immediately
-    let restore: Array<() => void> = [];
-    try {
-      const ls: Storage = window.localStorage;
-      const origSet = ls.setItem.bind(ls) as Storage['setItem'];
-      const origRemove = ls.removeItem.bind(ls) as Storage['removeItem'];
-      (ls as any).setItem = (k: string, v: string) => { const r = origSet(k, v); if (k === 'lang') queueMicrotask(update); return r; };
-      (ls as any).removeItem = (k: string) => { const r = origRemove(k); if (k === 'lang') queueMicrotask(update); return r; };
-      restore.push(() => { (ls as any).setItem = origSet; (ls as any).removeItem = origRemove; });
-    } catch {}
-
-    // Cross‑tab updates
     const onStorage = (e: StorageEvent) => { if (e.key === 'lang') update(); };
-
-    // Optional custom event from your toggle
     const onCustom = () => update();
-
-    // Bubble‑phase click/keydown; defer to after handlers run
     const onClick = () => setTimeout(update, 0);
     const onKey = () => setTimeout(update, 0);
-
-    // Focus & visibility
     const onFocus = () => update();
     const onVisibility = () => { if (!document.hidden) update(); };
 
-    // Observe <html lang="..."> changes (if your toggle sets it)
     const mo = new MutationObserver(() => update());
     if (document?.documentElement) {
       mo.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
@@ -144,8 +124,8 @@ function useLocalI18n() {
 
     window.addEventListener('storage', onStorage);
     window.addEventListener('mm:lang', onCustom as any);
-    document.addEventListener('click', onClick);     // bubble
-    document.addEventListener('keydown', onKey);     // bubble
+    document.addEventListener('click', onClick);
+    document.addEventListener('keydown', onKey);
     window.addEventListener('focus', onFocus);
     document.addEventListener('visibilitychange', onVisibility);
 
@@ -157,7 +137,6 @@ function useLocalI18n() {
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisibility);
       mo.disconnect();
-      for (const fn of restore) { try { (fn as any)(); } catch {} }
     };
   }, []);
 
@@ -359,17 +338,9 @@ export default function ImportPage() {
   const baseTimeline = useMemo(() => computePortfolioSeries(rows, scenario, asOf, 1), [rows, scenario, asOf]);
   const adjustedTimeline = useMemo(() => computePortfolioSeries(rows, scenario, asOf, growthFactor), [rows, scenario, asOf, growthFactor]);
 
-  const yMin = useMemo(() => {
-    const baseMin = baseTimeline.values.length ? Math.min.apply(null, baseTimeline.values.length ? baseTimeline.values.concat([baseTimeline.values[0]]) : [0]) : 0;
-    const adjMin = adjustedTimeline.values.length ? Math.min.apply(null, adjustedTimeline.values.length ? adjustedTimeline.values.concat([adjustedTimeline.values[0]]) : [0]) : 0;
-    return Math.min(baseMin, adjMin);
-  }, [baseTimeline, adjustedTimeline]);
-
-  const yMax = useMemo(() => {
-    const baseMax = baseTimeline.values.length ? Math.max.apply(null, baseTimeline.values) : 1;
-    const adjMax = adjustedTimeline.values.length ? Math.max.apply(null, adjustedTimeline.values) : 1;
-    return Math.max(1, baseMax, adjMax);
-  }, [baseTimeline, adjustedTimeline]);
+  const allValues: number[] = [...baseTimeline.values, ...adjustedTimeline.values];
+  const yMin = allValues.length ? Math.min(...allValues) : 0;
+  const yMax = allValues.length ? Math.max(...allValues) : 1;
 
   const baseChart = useMemo(() => chartGeometry(baseTimeline.values, baseTimeline.labels, yMin, yMax), [baseTimeline, yMin, yMax]);
   const adjustedChart = useMemo(() => chartGeometry(adjustedTimeline.values, adjustedTimeline.labels, yMin, yMax), [adjustedTimeline, yMin, yMax]);
@@ -397,7 +368,9 @@ export default function ImportPage() {
     clearImportState();
   };
 
-  const lastAdjusted = adjustedTimeline.values.length ? adjustedTimeline.values[adjustedTimeline.values.length - 1] : 0;
+  const lastAdjusted = adjustedTimeline.values.length
+    ? adjustedTimeline.values[adjustedTimeline.values.length - 1]
+    : 0;
 
   return (
     <main className="min-h-screen">
