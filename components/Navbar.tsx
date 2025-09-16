@@ -25,7 +25,7 @@ export default function Navbar() {
         <div className="flex items-center gap-1">
           <NavLink href="/pricing">{t('nav_pricing')}</NavLink>
           <NavLink href="/faq">{t('nav_faq')}</NavLink>
-          <NavLink href="/import">{t('nav_import')}</NavLink>
+          {/* Removed: <NavLink href="/import">{t('nav_import')}</NavLink> */}
           <a href="/demo" className="ml-2 inline-flex items-center gap-2 bg-brand-accent text-slate-900 hover:opacity-90 px-3 py-2 rounded-md text-sm font-semibold">
             {t('nav_demo')}
           </a>
