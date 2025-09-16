@@ -1,36 +1,33 @@
-// Simple deterministic price model for demo purposes (not real data).
-export type Asset = 'SP500' | 'MSCI' | 'BTC'
+// lib/pricing.ts
+import { Scenario } from "./symbols";
 
-const BASE_DATE = new Date('2024-01-01T00:00:00Z').getTime()
-const MS_PER_DAY = 86400000
-
-const DRIFT: Record<Asset, number> = {
-  SP500: 0.08,
-  MSCI: 0.07,
-  BTC: 0.50,
+export function multiplier(scenario: Scenario, fromISO: string, toISO: string): number {
+  const from = new Date(fromISO + "T00:00:00Z").getTime();
+  const to = new Date(toISO + "T00:00:00Z").getTime();
+  const years = Math.max(0, (to - from) / (365.25 * 86400_000));
+  const rate = scenario === "sp500" ? 0.08 : scenario === "msci" ? 0.07 : 0.20;
+  return Math.pow(1 + rate, years);
 }
 
-function wobble(days: number, freq: number, amp: number) {
-  return 1 + amp * Math.sin((2*Math.PI*freq*days)/365)
-}
+export { multiplier as getDeterministicMultiplier };
 
-export function priceIndex(asset: Asset, when: Date): number {
-  const days = Math.max(0, Math.floor((when.getTime() - BASE_DATE)/MS_PER_DAY))
-  const years = days / 365
-  const drift = DRIFT[asset]
-  return 100 * Math.exp(drift * years) * wobble(days, asset === 'BTC' ? 4 : 2, asset === 'BTC' ? 0.2 : 0.05)
-}
-
-export function ratio(asset: Asset, fromDate: Date, toDate: Date): number {
-  const a = Math.max(1e-6, priceIndex(asset, fromDate))
-  const b = Math.max(1e-6, priceIndex(asset, toDate))
-  return b / a
-}
-
-export function parseYMD(s: string): Date | null {
-  const m = /^\s*(\d{4})-(\d{2})-(\d{2})\s*$/.exec(s)
-  if (!m) return null
-  const y = +m[1], mo = +m[2]-1, d = +m[3]
-  const dt = new Date(Date.UTC(y, mo, d))
-  return isNaN(dt.getTime()) ? null : dt
+export async function getMultiplierAsync(scenario: Scenario, fromISO: string, toISO: string): Promise<number> {
+  if (process.env.NEXT_PUBLIC_USE_REAL_DATA !== "1") {
+    return multiplier(scenario, fromISO, toISO);
+  }
+  try {
+    const base = typeof window !== "undefined" ? "" : "http://localhost";
+    const url = new URL("/api/mm/multiplier", base || "http://localhost");
+    url.searchParams.set("scenario", scenario);
+    url.searchParams.set("from", fromISO);
+    url.searchParams.set("to", toISO);
+    const res = await fetch(url.toString(), { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const m = Number(json?.multiplier);
+    if (!isFinite(m) || m <= 0) throw new Error("bad multiplier");
+    return m;
+  } catch {
+    return multiplier(scenario, fromISO, toISO);
+  }
 }
