@@ -1,0 +1,10 @@
+{
+  "framework": "nextjs",
+  "redirects": [
+    {
+      "source": "/demo",
+      "destination": "/import",
+      "permanent": false
+    }
+  ]
+}
