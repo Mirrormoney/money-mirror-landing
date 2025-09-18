@@ -1,29 +1,38 @@
-// middleware.ts (project root)
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
+import { withAuth } from "next-auth/middleware";
 
-export function middleware(req: NextRequest) {
-  // Turn the wall on/off via env var
-  if (process.env.ENABLE_PASSWORD !== '1') return NextResponse.next()
+/**
+ * Robust middleware that compiles on all setups:
+ * - Exports a concrete default function (required by Next).
+ * - Only gates /import and /account when REQUIRE_AUTH=1 (or NEXT_PUBLIC_REQUIRE_AUTH=1).
+ * - Leaves /api/*, /_next/*, /public/* alone.
+ */
 
-  const auth = req.headers.get('authorization')
-  if (auth && auth.startsWith('Basic ')) {
-    const [, encoded] = auth.split(' ')
-    // Decode "username:password" from Basic Auth header
-    const [user, ...rest] = atob(encoded).split(':')
-    const pass = rest.join(':')
-    if (user === process.env.BASIC_AUTH_USER && pass === process.env.BASIC_AUTH_PASS) {
-      return NextResponse.next()
-    }
-  }
+const gate =
+  process.env.REQUIRE_AUTH === "1" ||
+  process.env.NEXT_PUBLIC_REQUIRE_AUTH === "1";
 
-  return new NextResponse('Authentication required', {
-    status: 401,
-    headers: { 'WWW-Authenticate': 'Basic realm="MirrorMoney Staging"' },
-  })
+const protectedBases = ["/import", "/account"];
+
+// Prepare the auth wrapper (returns a function(req) => NextResponse)
+const auth = withAuth({
+  callbacks: {
+    authorized: ({ token }) => !!token,
+  },
+});
+
+export default function middleware(req: NextRequest) {
+  if (!gate) return NextResponse.next();
+  const { pathname } = req.nextUrl;
+  const isProtected = protectedBases.some(
+    (p) => pathname === p || pathname.startsWith(p + "/")
+  );
+  if (!isProtected) return NextResponse.next();
+  // @ts-ignore - withAuth returns a function compatible with middleware
+  return auth(req);
 }
 
-// Don’t guard static assets/robots
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)'],
-}
+  // Apply to everything except Next internals and all API routes
+  matcher: ["/((?!_next|api|public).*)"],
+};
