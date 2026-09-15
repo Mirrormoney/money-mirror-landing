@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import type { PortfolioPoint } from '@/lib/portfolio'
-export default function PortfolioChart({ points, color, locale }: { points: PortfolioPoint[]; color: string; locale: string }) {
+export default function PortfolioChart({ points, color, locale, currency = 'EUR' }: { points: PortfolioPoint[]; color: string; locale: string; currency?: string }) {
   const [index, setIndex] = useState<number | null>(null)
   if (!points.length) return null
   const width = 900, height = 300, pad = 50
@@ -10,8 +10,8 @@ export default function PortfolioChart({ points, color, locale }: { points: Port
   const x = (date: string) => pad + (Date.parse(date) - start) / span * (width - pad * 2)
   const y = (value: number) => height - pad - value / max * (height - pad * 1.5)
   const path = (key: 'value' | 'spent') => points.map((p, i) => `${i ? 'L' : 'M'}${x(p.date)},${y(p[key])}`).join(' ')
-  const selected = points[index ?? points.length - 1]
-  const money = (value: number) => new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(value)
+  const selected = points[Math.min(index ?? points.length - 1, points.length - 1)]
+  const money = (value: number) => new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)
   return <div>
     <div className="flex flex-wrap justify-between gap-2 text-sm text-slate-400"><span>{new Date(`${selected.date}T12:00:00`).toLocaleDateString(locale)}</span><span><span style={{ color }}>{money(selected.value)}</span><span className="ml-4">{locale === 'de-DE' ? 'Ausgegeben' : 'Spent'} {money(selected.spent)}</span></span></div>
     <svg className="mt-3 w-full touch-pan-y" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={locale === 'de-DE' ? 'Historischer Vergleich: Ausgaben und hypothetischer Wert' : 'Historical comparison of spending and hypothetical value'} onMouseLeave={() => setIndex(null)} onMouseMove={e => {
@@ -29,6 +29,6 @@ export default function PortfolioChart({ points, color, locale }: { points: Port
       <circle cx={x(selected.date)} cy={y(selected.value)} r="5" fill={color} />
       <text x={pad} y={height - 15} fill="#64748b" fontSize="12">{points[0].date}</text><text x={width - pad} y={height - 15} textAnchor="end" fill="#64748b" fontSize="12">{points.at(-1)!.date}</text>
     </svg>
-    <label className="sr-only" htmlFor="chart-date">Explore chart date</label><input id="chart-date" type="range" min={0} max={points.length - 1} value={index ?? points.length - 1} onChange={e => setIndex(Number(e.target.value))} className="w-full accent-emerald-400" />
+    <label className="sr-only" htmlFor="chart-date">{locale === 'de-DE' ? 'Chart-Datum erkunden' : 'Explore chart date'}</label><input id="chart-date" type="range" min={0} max={points.length - 1} value={Math.min(index ?? points.length - 1, points.length - 1)} onChange={e => setIndex(Number(e.target.value))} className="w-full accent-emerald-400" />
   </div>
 }
