@@ -12,6 +12,9 @@ export default function LoginForm({ google, apple, emailLink }: { google: boolea
   const [message, setMessage] = useState('')
   const [email, setEmail] = useState('')
   useEffect(() => {
+    setRegister(new URLSearchParams(window.location.search).get('mode') === 'register')
+  }, [])
+  useEffect(() => {
     const query = new URLSearchParams(window.location.search)
     if (query.has('error')) setError(de ? 'Anmeldung fehlgeschlagen. Bitte nutze deine ursprüngliche Anmeldemethode.' : 'Sign-in failed. Please use your original sign-in method.')
     if (query.has('sent')) setMessage(de ? 'Bitte prüfe dein E-Mail-Postfach.' : 'Check your inbox for your sign-in link.')

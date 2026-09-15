@@ -20,7 +20,7 @@ export default function Navbar() {
     <header className="border-b border-white/10">
       <nav className="container py-4 flex flex-wrap gap-3 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <span className="inline-block w-8 h-8 rounded-xl bg-brand-accent" />
+          <img src="/mirrormoney-mark.svg" alt="" width="38" height="38" className="shrink-0" />
           <span className="text-lg font-semibold">MirrorMoney</span>
         </Link>
         <div className="flex flex-wrap items-center gap-1">

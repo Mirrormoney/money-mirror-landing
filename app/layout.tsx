@@ -17,7 +17,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     type: 'website',
   },
-  icons: [{ rel: 'icon', url: '/favicon.ico' }],
+  metadataBase: new URL('https://money-mirror-landing.vercel.app'),
+  icons: [{ rel: 'icon', url: '/mirrormoney-mark.svg', type: 'image/svg+xml' }],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
