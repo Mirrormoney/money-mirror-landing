@@ -1,34 +1,7 @@
 'use client'
-import { useT } from '@/lib/i18n'
-
+import Link from 'next/link'
+import { useLanguage } from '@/lib/i18n'
 export default function Pricing() {
-  const t = useT()
-  return (
-    <section className="container py-16">
-      <h1 className="text-3xl font-semibold">{t('pricing_title')}</h1>
-      <p className="mt-2 text-slate-300 max-w-2xl">{t('pricing_sub')}</p>
-      <div className="mt-8 grid md:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-white/10 p-6">
-          <div className="text-slate-400 text-sm">{t('free')}</div>
-          <div className="mt-2 text-4xl font-semibold">€0</div>
-          <ul className="mt-4 space-y-2 text-slate-300">
-            <li>{t('free_f1')}</li>
-            <li>{t('free_f2')}</li>
-            <li>{t('free_f3')}</li>
-          </ul>
-          <button className="mt-6 w-full bg-white/10 hover:bg-white/15 py-3 rounded-xl font-semibold">{t('get_started')}</button>
-        </div>
-        <div className="rounded-2xl border border-brand-accent/30 p-6 bg-brand-accent/5">
-          <div className="text-brand-accent text-sm">{t('premium')}</div>
-          <div className="mt-2 text-4xl font-semibold">€3.99<span className="text-base text-slate-400">{t('month')}</span></div>
-          <ul className="mt-4 space-y-2 text-slate-300">
-            <li>{t('prem_f1')}</li>
-            <li>{t('prem_f2')}</li>
-            <li>{t('prem_f3')}</li>
-          </ul>
-          <button className="mt-6 w-full bg-brand-accent text-slate-900 hover:opacity-90 py-3 rounded-xl font-semibold">{t('upgrade')}</button>
-        </div>
-      </div>
-    </section>
-  )
+ const { lang } = useLanguage(); const de = lang === 'de'
+ return <section className="container max-w-4xl py-16"><p className="eyebrow">{de ? 'DEIN PASSENDER PLAN' : 'FIND YOUR PERSPECTIVE'}</p><h1 className="mt-4 text-4xl font-semibold">{de ? 'Einfach starten. Mehr entdecken.' : 'Start simply. Explore more.'}</h1><div className="mt-10 grid gap-6 md:grid-cols-2"><div className="panel p-8"><h2 className="text-xl">Free</h2><p className="mt-5 text-4xl font-semibold">€0</p><ul className="my-8 space-y-4 text-sm text-slate-300"><li>✓ S&P 500, DAX, Bitcoin & Gold</li><li>✓ {de ? 'Persönliches Konto mit gespeicherten Ausgaben' : 'Personal account with saved spending'}</li><li>✓ {de ? 'Historische Charts in Euro' : 'Historical charts in euros'}</li><li>✓ CSV import & export</li></ul><Link href="/import" className="button-primary w-full">{de ? 'Kostenlos starten' : 'Start for free'}</Link></div><div className="panel border-emerald-400/30 p-8"><h2 className="text-xl text-emerald-300">Premium</h2><p className="mt-5 text-2xl font-semibold">{de ? 'Zugang auf Anfrage' : 'Access by invitation'}</p><ul className="my-8 space-y-4 text-sm text-slate-300"><li>✓ {de ? 'Alles aus Free' : 'Everything in Free'}</li><li>✓ {de ? 'Eigene Benchmarks per ISIN, Name oder Kürzel' : 'Your own benchmarks by ISIN, name or ticker'}</li><li>✓ {de ? 'Bis zu 20 gespeicherte Wertpapiere' : 'Up to 20 saved securities'}</li><li>✓ {de ? 'Historische Kurse nach Datenverfügbarkeit' : 'Historical prices where coverage is available'}</li></ul><a href="mailto:hello@money-mirror.com?subject=MirrorMoney%20Premium" className="button-secondary w-full">{de ? 'Premium anfragen' : 'Request Premium'}</a><p className="mt-4 text-xs leading-relaxed text-slate-500">{de ? 'Premium wird derzeit manuell freigeschaltet. Es wird keine Zahlung ausgelöst. Nicht jede ISIN wird unterstützt.' : 'Premium is currently enabled manually. No payment is taken. Not every ISIN is supported.'}</p></div></div></section>
 }

@@ -3,6 +3,9 @@ export default function Datenschutz() {
     <section className="container py-16 prose prose-invert max-w-none">
       <h1>Datenschutzerklärung (Kurzfassung)</h1>
       <p><em>Hinweis: Platzhalter – bitte an euer Produkt anpassen. Dies ist keine Rechtsberatung.</em></p>
+      <h2>Technischer Stand dieser Vorschau</h2>
+      <p>Für dein Konto speichern wir E-Mail-Adresse, optional deinen Namen und einen gesicherten Passwort-Hash. Deine Ausgaben enthalten Datum, Betrag, Beschreibung und Kategorie. Die Speicherung erfolgt in einer Neon-Postgres-Datenbank in Frankfurt; die Website wird auf Vercel betrieben. Notwendige Sitzungscookies ermöglichen die Anmeldung. Deine Spracheinstellung wird lokal im Browser gespeichert. Es ist kein zusätzliches Analyse- oder Werbetracking eingebaut.</p>
+      <p>Historische Marktdaten werden über EODHD abgerufen, sobald der Datenzugang eingerichtet ist. Dabei werden Instrumente und Zeiträume angefragt, nicht deine Ausgabenbeschreibungen oder deine E-Mail-Adresse. Du kannst deine Ausgaben im Dashboard exportieren und dein Konto mit den zugehörigen Ausgaben in den Kontoeinstellungen löschen. Backups und technische Protokolle unterliegen den Aufbewahrungsprozessen der Dienstleister.</p>
 
       <h2>1. Verantwortlicher</h2>
       <p>

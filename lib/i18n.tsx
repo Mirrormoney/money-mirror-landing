@@ -232,19 +232,22 @@ const LangContext = createContext<{
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Lang>('en')
+  const [ready, setReady] = useState(false)
 
   // on first load: use saved choice or browser language
   useEffect(() => {
-    const saved =
-      typeof window !== 'undefined' ? (localStorage.getItem('lang') as Lang | null) : null
-    if (saved) setLang(saved)
-    else if (typeof navigator !== 'undefined' && navigator.language?.toLowerCase().startsWith('de'))
-      setLang('de')
+    try {
+      const saved = localStorage.getItem('lang')
+      if (saved === 'en' || saved === 'de') setLang(saved)
+      else if (navigator.language?.toLowerCase().startsWith('de')) setLang('de')
+    } catch {}
+    setReady(true)
   }, [])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') localStorage.setItem('lang', lang)
-  }, [lang])
+    if (ready) { try { localStorage.setItem('lang', lang) } catch {} }
+    document.documentElement.lang = lang
+  }, [lang, ready])
 
   const t = useMemo(() => {
     return (key: keyof Dict['en']) => (dict[lang][key] ?? dict.en[key]) as string

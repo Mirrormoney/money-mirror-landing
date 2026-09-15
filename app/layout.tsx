@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import type { Metadata } from 'next'
 import { LanguageProvider } from '@/lib/i18n'
+import ReviewBanner from '@/components/ReviewBanner'
 
 export const metadata: Metadata = {
   title: 'MirrorMoney — See what your spending could’ve become',
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <LanguageProvider>
+          {!process.env.EODHD_API_KEY && <ReviewBanner />}
           <Navbar />
           <main>{children}</main>
           <Footer />

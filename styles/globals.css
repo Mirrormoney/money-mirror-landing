@@ -5,3 +5,19 @@
 html, body { height: 100%; }
 body { @apply bg-slate-950 text-slate-100 antialiased; }
 .container { @apply max-w-6xl mx-auto px-4; }
+
+@layer components {
+  .panel { @apply rounded-2xl border border-white/10 bg-slate-900/60; }
+  .eyebrow { @apply text-xs font-semibold tracking-[0.16em] text-emerald-300; }
+  .field-label { @apply block text-xs font-medium text-slate-400; }
+  .field { @apply mt-2 block w-full min-w-0 rounded-lg border border-white/10 bg-slate-950 px-3 py-3 text-sm text-slate-100 outline-none transition focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/10; color-scheme: dark; }
+  .button-primary { @apply inline-flex items-center justify-center whitespace-nowrap rounded-lg bg-emerald-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-emerald-300 disabled:cursor-not-allowed disabled:opacity-50; }
+  .button-secondary { @apply inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-200 transition hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40; }
+  .notice-error { @apply rounded-lg border border-rose-400/20 bg-rose-400/5 p-4 text-sm leading-relaxed text-rose-200; }
+  .notice { @apply rounded-lg border border-emerald-400/20 bg-emerald-400/5 p-3 text-sm text-emerald-200; }
+  .metric-label { @apply text-[11px] tracking-widest text-slate-400; }
+  .metric { @apply mt-3 text-3xl font-semibold tracking-tight tabular-nums; }
+}
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid #34d399; outline-offset: 4px; }
+button:disabled { cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
