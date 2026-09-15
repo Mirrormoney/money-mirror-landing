@@ -5,6 +5,7 @@ import { FREE_BENCHMARKS } from '@/lib/benchmarks'
 import { euroHistory } from '@/lib/market'
 import { calculatePortfolio } from '@/lib/portfolio'
 import { ApiError, apiError, limit } from '@/lib/http'
+export const maxDuration = 60
 export async function GET(request: Request) {
   try {
     const user = await requireUser()
@@ -19,10 +20,11 @@ export async function GET(request: Request) {
     }
     const spending = await prisma.expense.findMany({ where: { userId: user.id }, orderBy: { date: 'asc' } })
     if (!spending.length) return NextResponse.json({ empty: true })
-    const prices = await euroHistory(instrument)
+    const history = await euroHistory(instrument)
+    const prices = history.points
     let result
     try { result = calculatePortfolio(spending, prices, new Date().toISOString().slice(0, 10)) }
     catch (e) { throw new ApiError(e instanceof Error ? e.message : 'Unable to calculate this comparison.', 422) }
-    return NextResponse.json({ ...result, instrument, source: 'EODHD', stale: !!result.priceDate && Date.now() - Date.parse(result.priceDate) > 7 * 86400000 }, { headers: { 'Cache-Control': 'private, no-store' } })
+    return NextResponse.json({ ...result, instrument, source: history.source, sourceUrl: history.sourceUrl, fetchedAt: history.fetchedAt, historyStart: prices[0]?.date, adjusted: history.adjusted, cachedFallback: history.fallback, stale: !!result.priceDate && Date.now() - Date.parse(result.priceDate) > 7 * 86400000 }, { headers: { 'Cache-Control': 'private, no-store' } })
   } catch (error) { return apiError(error) }
 }

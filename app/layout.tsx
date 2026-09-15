@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <LanguageProvider>
-          {!process.env.EODHD_API_KEY && <ReviewBanner />}
+          <ReviewBanner />
           <Navbar />
           <main>{children}</main>
           <Footer />

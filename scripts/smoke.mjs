@@ -20,6 +20,7 @@ async function create(suffix) {
   assert.equal(login.status, 200)
   assert.equal((await call('/api/account')).status, 200)
   accounts.push(call)
+  call.email = email
   return call
 }
 try {
@@ -38,6 +39,36 @@ try {
   assert.equal((await alice('/api/benchmarks?q=Apple')).status, 403)
   assert.equal((await alice('/api/portfolio?benchmark=AAPL.US')).status, 403)
   assert.equal((await alice('/api/account/plan', 'POST', { email: 'nobody@example.com', premium: true })).status, 403)
+  if (process.env.TEST_MARKET === '1') {
+    for (const benchmark of (await alice('/api/benchmarks')).data.benchmarks) {
+      const comparison = await alice(`/api/portfolio?benchmark=${encodeURIComponent(benchmark.id)}`)
+      assert.equal(comparison.status, 200, JSON.stringify(comparison.data))
+      assert.equal(comparison.data.spent, 4.5)
+      assert.ok(comparison.data.value > 0 && comparison.data.points.length > 20)
+      assert.ok(comparison.data.source.includes('Yahoo Finance'))
+      console.log(`PASS market: ${benchmark.name}, ${comparison.data.points.length} chart points, last close ${comparison.data.priceDate}`)
+    }
+    // Grant only this newly-created disposable test user premium; cleanup deletes it.
+    const { config } = await import('dotenv'); config({ path: '.env.local', quiet: true })
+    const { PrismaClient } = await import('@prisma/client')
+    const { PrismaPg } = await import('@prisma/adapter-pg')
+    const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.MIRROR_DATABASE_URL }) })
+    try {
+      const user = await db.user.findUniqueOrThrow({ where: { email: alice.email } })
+      await db.subscription.upsert({ where: { userId: user.id }, create: { userId: user.id, isPremium: true }, update: { isPremium: true } })
+    } finally { await db.$disconnect() }
+    const search = await alice('/api/benchmarks?q=US0378331005')
+    assert.equal(search.status, 200, JSON.stringify(search.data))
+    const apple = search.data.results.find(r => r.id === 'yahoo:AAPL')
+    assert.ok(apple, 'ISIN resolves Apple')
+    assert.equal((await alice('/api/benchmarks', 'POST', { id: apple.id })).status, 200)
+    const custom = await alice(`/api/portfolio?benchmark=${encodeURIComponent(apple.id)}`)
+    assert.equal(custom.status, 200, JSON.stringify(custom.data))
+    assert.ok(custom.data.value > 0)
+    assert.equal((await bob(`/api/portfolio?benchmark=${encodeURIComponent(apple.id)}`)).status, 403)
+    assert.equal((await alice('/api/benchmarks', 'DELETE', { id: apple.id })).status, 200)
+    console.log('PASS premium: ISIN search, add, historical comparison, isolation and remove')
+  }
   assert.equal((await alice('/api/spending', 'PATCH', { ...entry, id: row.id, amountCents: 650 })).status, 200)
   assert.equal((await alice('/api/spending')).data.spending[0].amountCents, 650)
   assert.equal((await alice('/api/spending', 'DELETE', { id: row.id })).status, 200)

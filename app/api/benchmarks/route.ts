@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { FREE_BENCHMARKS } from '@/lib/benchmarks'
 import { searchInstruments } from '@/lib/market'
 import { ApiError, apiError, jsonBody, sameOrigin, limit } from '@/lib/http'
+export const maxDuration = 60
 export async function GET(request: Request) {
   try {
     const user = await requireUser()

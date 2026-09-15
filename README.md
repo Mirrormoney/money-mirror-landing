@@ -10,7 +10,7 @@
 - Email/password account registration and sign-in; passwords hashed with Node scrypt.
 - Server-authorized spending storage, editing, deletion, CSV import/export, and account deletion.
 - Free benchmark allowlist: S&P 500, DAX, Bitcoin, Gold. Premium checks happen on every relevant API request.
-- Premium ISIN/ticker/name lookup through EODHD, saved custom instruments, maximum 20 per account.
+- Premium ISIN/ticker/name lookup through the public Yahoo Finance search endpoint, saved custom instruments, maximum 20 per account.
 - Historical cashflow calculation in EUR, first closing price on/after each expense, weekend cash treatment, historical FX, explicit missing-history errors.
 - Persistent daily market cache; daily Vercel cron at 06:00 UTC. Data ends at the previous calendar day or earlier available trading close.
 - Google and Apple providers activate when their credentials are present. Email links and password recovery activate with SMTP configuration.
@@ -20,14 +20,20 @@
 Do not paste credentials into chat or commit them. Add them to this project's Vercel Environment Variables, then redeploy.
 
 ### Historical market data
-`EODHD_API_KEY` is required. Choose access covering historical indices, forex/metals, crypto, securities, ISIN search, and the history depth you want to offer. For public/commercial redistribution, confirm licensing directly with EODHD.
-- API and history: https://eodhd.com/financial-apis/api-for-historical-data-and-volumes
-- ISIN search: https://eodhd.com/financial-apis/search-api-for-stocks-etfs-mutual-funds
-- Commercial options: https://eodhd.com/commercial-pricing
+No paid data account or key is used. This is a free prototype, not a verified licensed commercial feed.
 
-Configured symbols: `GSPC.INDX`, `GDAXI.INDX`, `BTC-USD.CC`, `XAUUSD.FOREX`. Verify all four against the purchased account before declaring the data feature live; DAX coverage and metadata still require verification. EUR FX pairs are requested as `EUR{currency}.FOREX`.
+- S&P 500: SPY (SPDR S&P 500 ETF Trust), USD, adjusted prices.
+- DAX: EXS1.DE (iShares Core DAX UCITS ETF), EUR, accumulating fund.
+- Bitcoin: BTC-EUR, EUR.
+- Gold: GLD (SPDR Gold Shares), USD, fund expenses embedded.
+- Market source: publicly accessible Yahoo Finance chart/search endpoints. No authentication bypass, cookie scraping or proxy rotation.
+- FX source: Frankfurter v1 / ECB, from 1999. https://frankfurter.dev/
+- Full daily histories refresh on demand once per UTC day to keep corporate-action adjustments consistent. Cron warms the four defaults only. No full-market database.
+- Global budget: 500 upstream calls/day; 15-minute per-instrument retry cooldown. No auto-upgrades or paid fallback.
+- Stale cache may be used for up to seven days with a visible warning. Missing history fails explicitly. Search returns up to four validated listings; ISIN coverage is best-effort.
+- Premium remains manually enabled and costs users nothing during testing.
 
-The public test token was used locally to verify actual Bitcoin and EURUSD history. It is not installed in production, and its cached data was removed after testing. The application never uses invented growth rates as real historical returns.
+Commercial launch remains unresolved: Yahoo public availability is not a commercial redistribution license. Vercel Hobby is for personal/non-commercial projects. No new subscription was created, but existing account billing and future usage costs are not guaranteed zero. Do not market this as a licensed commercial service without reviewing those requirements.
 
 ### Google
 Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` from your Google OAuth application. Authorized redirect URI:
@@ -63,12 +69,14 @@ Commands:
 Secrets: `MIRROR_DATABASE_URL`, `NEXTAUTH_SECRET`, `CRON_SECRET`. Existing `DATABASE_URL`/Prisma settings were retained without modification. The new application uses `MIRROR_DATABASE_URL`.
 
 ## Calculation limits
-S&P 500 is a price index; DAX is a performance index. Gold and Bitcoin use spot history. Security prices use provider-adjusted closes. These series differ in dividend treatment; the dashboard discloses it. Values exclude fees, taxes, spreads and interest on pending cash. Premium coverage is not universal; missing history fails explicitly. Trading gaps above seven days and FX gaps above seven days are rejected rather than silently approximated.
+The fixed benchmarks use the fund/Bitcoin mappings above, not official index or gold spot feeds. Provider-adjusted closes are preferred; raw closes are used only if no adjusted series exists. Fund costs and tracking differences are embedded. Values exclude fees, taxes, spreads and interest on pending cash. Premium coverage is not universal; missing history fails explicitly. Trading gaps above seven days and FX gaps above seven days are rejected rather than silently approximated.
 
 ## Validation status
 - Production build and TypeScript passed locally.
-- Eight calculation/CSV tests passed.
+- Eleven parser/calculation/CSV tests passed.
 - Local end-to-end API smoke tests passed: registration/login, persistence, edits/deletes, isolation, request-origin checks, four free benchmarks, premium and admin rejection, account deletion and invalidated sessions.
 - Browser verified registration, saving, reload persistence, editing, real Bitcoin/EUR history, negative return display, desktop and phone-width layout.
 - npm audit reported zero known vulnerabilities after updates.
-- Full provider-account coverage, Google/Apple login, SMTP delivery and paid checkout remain external setup/validation items.
+- Google/Apple login, SMTP delivery and commercial licensing remain external setup/validation items. No checkout is configured.
+
+Set TEST_MARKET=1 when running scripts/smoke.mjs to test all four live calculations and premium ISIN add/compare/remove. It grants premium only to a newly created disposable test account and removes it afterward. Requires local database env for that test grant.
