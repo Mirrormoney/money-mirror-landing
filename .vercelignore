@@ -1,0 +1,8 @@
+node_modules
+.next
+.env*
+.git
+--template
+*.tsbuildinfo
+e --abbrev-ref HEAD
+tage

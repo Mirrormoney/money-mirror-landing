@@ -1,25 +1,7 @@
 'use client'
-import { useT } from '@/lib/i18n'
-
+import { useLanguage } from '@/lib/i18n'
 export default function FAQ() {
-  const t = useT()
-  const faqs = [
-    { q: t('faq_q1'), a: t('faq_a1') },
-    { q: t('faq_q2'), a: t('faq_a2') },
-    { q: t('faq_q3'), a: t('faq_a3') },
-    { q: t('faq_q4'), a: t('faq_a4') },
-  ]
-  return (
-    <section className="container py-16">
-      <h1 className="text-3xl font-semibold">{t('faq_title')}</h1>
-      <div className="mt-8 space-y-6">
-        {faqs.map((f, i)=>(
-          <div key={i} className="rounded-xl border border-white/10 p-6">
-            <div className="font-semibold">{f.q}</div>
-            <div className="mt-2 text-slate-300">{f.a}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
+ const { lang } = useLanguage(); const de = lang === 'de'
+ const rows = de ? [['Woher stammen die Kurse?','Aus öffentlich abrufbaren Yahoo-Finance-Tageskursen. SPY, EXS1.DE und GLD dienen als Fonds-Vergleiche für S&P 500, DAX und Gold; Bitcoin nutzt BTC-EUR. Euro-Wechselkurse stammen von Frankfurter / EZB. Es werden keine pauschalen Renditen als echte Kurse ausgegeben.'],['Wie wird gerechnet?','Jede Ausgabe wird am ersten verfügbaren Schlusskurs am oder nach dem Datum hypothetisch angelegt. Fremdwährungen werden mit historischen Wechselkursen in Euro umgerechnet.'],['Was passiert am Wochenende?','Bis zum nächsten verfügbaren Schlusskurs bleibt der Betrag unverzinstes Bargeld. Bitcoin kann auch am Wochenende Kurse haben.'],['Kann ich jede ISIN vergleichen?','Premium unterstützt die Suche nach ISIN, Name oder Kürzel. Die Datenabdeckung ist je nach Börse, Wertpapier und Zeitraum unterschiedlich. Fehlende Daten werden klar angezeigt.'],['Sind meine Ausgaben privat?','Deine Einträge sind an dein angemeldetes Konto gebunden. Andere Nutzer können sie nicht lesen. Im Konto kannst du deine Daten exportieren und dein Konto löschen.'],['Sind das Anlageempfehlungen?','Nein. Das ist ein historischer Vergleich ohne Gebühren, Steuern und Handelsspannen. Er sagt nichts über zukünftige Ergebnisse aus.']] : [['Where do prices come from?','From publicly accessible Yahoo Finance daily prices. SPY, EXS1.DE and GLD are fund proxies for S&P 500, DAX and Gold; Bitcoin uses BTC-EUR. Euro exchange rates come from Frankfurter / ECB. Fixed growth assumptions are never presented as actual market prices.'],['How is the comparison calculated?','Each expense is hypothetically invested at the first available close on or after its date. Foreign prices are converted to euros using historical exchange rates.'],['What happens on weekends?','The amount stays as uninvested cash until the next available closing price. Bitcoin may have prices on weekends too.'],['Can I compare any ISIN?','Premium lets you search by ISIN, name or ticker. Coverage varies by exchange, security and date range. Missing history is explained clearly.'],['Is my spending private?','Your entries belong to your signed-in account. Other users cannot read them. You can export your data and delete your account from account settings.'],['Is this investment advice?','No. This is a historical comparison excluding fees, taxes and trading spreads. It does not predict future results.']]
+ return <section className="container max-w-3xl py-16"><p className="eyebrow">FAQ</p><h1 className="mt-4 text-4xl font-semibold">{de ? 'Gut zu wissen.' : 'Good to know.'}</h1><div className="mt-10 space-y-3">{rows.map(([q,a]) => <details key={q} className="panel p-5"><summary className="cursor-pointer font-medium">{q}</summary><p className="mt-4 text-sm leading-relaxed text-slate-400">{a}</p></details>)}</div></section>
 }

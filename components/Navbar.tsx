@@ -15,19 +15,19 @@ const NavLink = ({ href, children }: { href: string, children: React.ReactNode }
 }
 
 export default function Navbar() {
-  const { setLang, t } = useLanguage()
+  const { setLang, t, lang } = useLanguage()
   return (
     <header className="border-b border-white/10">
-      <nav className="container py-4 flex items-center justify-between">
+      <nav className="container py-4 flex flex-wrap gap-3 items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <span className="inline-block w-8 h-8 rounded-xl bg-brand-accent" />
+          <img src="/mirrormoney-mark.svg" alt="" width="38" height="38" className="shrink-0" />
           <span className="text-lg font-semibold">MirrorMoney</span>
         </Link>
-        <div className="mr-4 flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1">
           <NavLink href="/pricing">{t('nav_pricing')}</NavLink>
           <NavLink href="/faq">{t('nav_faq')}</NavLink>
           <a href="/demo" className="ml-2 inline-flex items-center gap-2 bg-brand-accent text-slate-900 hover:opacity-90 px-3 py-2 rounded-md text-sm font-semibold">
-            {t('nav_demo')}
+            {lang === 'de' ? 'Meine Ausgaben' : 'My spending'}
           </a>
           <NavAuth />
           <div className="ml-2 flex items-center gap-1">

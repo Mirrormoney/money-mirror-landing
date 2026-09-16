@@ -1,0 +1,19 @@
+'use client'
+import { useState, type FormEvent } from 'react'
+import Link from 'next/link'
+import { signOut } from 'next-auth/react'
+import { useLanguage } from '@/lib/i18n'
+export default function AccountPanel({ email, name, premium, admin, hasPassword }: { email: string; name: string; premium: boolean; admin: boolean; hasPassword: boolean }) {
+  const { lang } = useLanguage(), de = lang === 'de'
+  const [busy, setBusy] = useState(false), [error, setError] = useState(''), [confirm, setConfirm] = useState('')
+  async function password(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setBusy(true); setError('')
+    const form = new FormData(event.currentTarget)
+    try {
+      const response = await fetch('/api/account/password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ currentPassword: form.get('currentPassword'), password: form.get('password') }) })
+      const data = await response.json(); if (!response.ok) throw new Error(data.error)
+      await signOut({ callbackUrl: '/login' })
+    } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
+  }
+  return <section className="container max-w-2xl py-14"><p className="eyebrow">{de ? 'DEIN KONTO' : 'YOUR ACCOUNT'}</p><h1 className="mt-4 text-4xl font-semibold">{name || (de ? 'Einstellungen' : 'Account settings')}</h1>{error && <p role="alert" className="notice-error mt-6">{error}</p>}<div className="panel mt-8 p-6"><p className="text-slate-300">{email}</p><p className="mt-3 text-sm text-emerald-300">{premium ? 'Premium' : 'Free'} · EUR</p><div className="mt-5 flex flex-wrap gap-3"><Link className="button-primary" href="/import">{de ? 'Zu meinen Ausgaben' : 'My spending'}</Link><button className="button-secondary" onClick={() => signOut({ callbackUrl: '/' })}>{de ? 'Abmelden' : 'Sign out'}</button>{admin && <Link href="/admin/users" className="button-secondary">Admin</Link>}</div></div><form onSubmit={password} className="panel mt-5 space-y-4 p-6"><h2 className="font-medium">{de ? 'Passwort ändern' : 'Change password'}</h2>{hasPassword && <label className="field-label">{de ? 'Aktuelles Passwort' : 'Current password'}<input className="field" name="currentPassword" type="password" autoComplete="current-password" required maxLength={128} /></label>}<label className="field-label">{de ? 'Neues Passwort (mindestens 12 Zeichen)' : 'New password (at least 12 characters)'}<input className="field" name="password" type="password" autoComplete="new-password" required minLength={12} maxLength={128} /></label><button disabled={busy} className="button-secondary">{de ? 'Passwort speichern und neu anmelden' : 'Save password and sign in again'}</button></form><details className="panel mt-5 p-6"><summary className="cursor-pointer text-sm text-slate-400">{de ? 'Konto und alle Ausgaben löschen' : 'Delete account and all spending'}</summary><p className="my-4 text-sm text-slate-400">{de ? 'Dies löscht dein Konto und deine gespeicherten Ausgaben dauerhaft. Exportiere deine Ausgaben vorher im Dashboard. Gib DELETE ein, um zu bestätigen.' : 'This permanently deletes your account and saved spending. Export your spending from the dashboard first. Type DELETE to confirm.'}</p><input className="field" aria-label="Type DELETE" value={confirm} onChange={e => setConfirm(e.target.value)} /><button className="button-secondary mt-4 text-rose-300" disabled={busy || confirm !== 'DELETE'} onClick={async () => { setBusy(true); try { const response = await fetch('/api/account', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ confirmation: confirm }) }); if (!response.ok) throw new Error((await response.json()).error); await signOut({ callbackUrl: '/' }) } catch (e) { setError((e as Error).message); setBusy(false) } }}>{de ? 'Konto endgültig löschen' : 'Permanently delete account'}</button></details></section>
+}
