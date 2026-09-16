@@ -4,6 +4,7 @@ import Footer from '@/components/Footer'
 import type { Metadata } from 'next'
 import { LanguageProvider } from '@/lib/i18n'
 import ReviewBanner from '@/components/ReviewBanner'
+import TrafficTracker from '@/components/TrafficTracker'
 
 export const metadata: Metadata = {
   title: 'MirrorMoney — See what your spending could’ve become',
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'MirrorMoney',
     description: 'See what your spending could’ve become.',
-    url: 'https://www.money-mirror.com',
+    url: 'https://money-mirror-landing.vercel.app',
     siteName: 'MirrorMoney',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
     locale: 'en_US',
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LanguageProvider>
           <ReviewBanner />
           <Navbar />
+          <TrafficTracker />
           <main>{children}</main>
           <Footer />
         </LanguageProvider>

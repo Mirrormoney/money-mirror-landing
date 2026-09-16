@@ -98,3 +98,18 @@ model RateLimit {
   expiresAt DateTime
   @@index([expiresAt])
 }
+
+model TrafficDay {
+  day String
+  path String
+  views Int @default(0)
+  visitors Int @default(0)
+  @@id([day, path])
+}
+model TrafficVisitor {
+  day String
+  hash String
+  expiresAt DateTime @db.Timestamptz
+  @@id([day, hash])
+  @@index([expiresAt])
+}

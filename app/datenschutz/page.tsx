@@ -1,55 +1,23 @@
+'use client'
+import { useLanguage } from '@/lib/i18n'
 export default function Datenschutz() {
-  return (
-    <section className="container py-16 prose prose-invert max-w-none">
-      <h1>Datenschutzerklärung (Kurzfassung)</h1>
-      <p><em>Hinweis: Platzhalter – bitte an euer Produkt anpassen. Dies ist keine Rechtsberatung.</em></p>
-      <h2>Technischer Stand dieser Vorschau</h2>
-      <p>Für dein Konto speichern wir E-Mail-Adresse, optional deinen Namen und einen gesicherten Passwort-Hash. Deine Ausgaben enthalten Datum, Betrag, Beschreibung und Kategorie. Die Speicherung erfolgt in einer Neon-Postgres-Datenbank in Frankfurt; die Website wird auf Vercel betrieben. Notwendige Sitzungscookies ermöglichen die Anmeldung. Deine Spracheinstellung wird lokal im Browser gespeichert. Es ist kein zusätzliches Analyse- oder Werbetracking eingebaut.</p>
-      <p>Historische Marktdaten werden über Yahoo Finance, Wechselkurse über Frankfurter abgerufen. Dabei werden Instrumente und Zeiträume angefragt, nicht deine Ausgabenbeschreibungen oder deine E-Mail-Adresse. Du kannst deine Ausgaben im Dashboard exportieren und dein Konto mit den zugehörigen Ausgaben in den Kontoeinstellungen löschen. Backups und technische Protokolle unterliegen den Aufbewahrungsprozessen der Dienstleister.</p>
-
-      <h2>1. Verantwortlicher</h2>
-      <p>
-        [Ihr Name / Unternehmen]<br/>
-        [Adresse]<br/>
-        E-Mail: <a href="mailto:hello@money-mirror.com">hello@money-mirror.com</a>
-      </p>
-
-      <h2>2. Zwecke & Rechtsgrundlagen</h2>
-      <p>Wir verarbeiten personenbezogene Daten zur Bereitstellung dieser Website (Art. 6 Abs. 1 lit. f DSGVO), zur Kommunikation auf Anfrage (Art. 6 Abs. 1 lit. b/f DSGVO) und – sofern aktiviert – für anonyme Nutzungsstatistiken (Art. 6 Abs. 1 lit. f DSGVO).</p>
-
-      <h2>3. Server-Logs & Hosting</h2>
-      <p>Diese Website wird gehostet bei [Hosting-Provider, z. B. Vercel]. Beim Aufruf werden serverseitig technische Logs verarbeitet (z. B. IP-Adresse, Zeitpunkt, User-Agent) zur Sicherstellung des Betriebs und zur Fehlerdiagnose.</p>
-
-      <h2>4. Cookies & lokale Speicherung</h2>
-      <p>Die Seite kann notwendige Cookies oder LocalStorage verwenden (z. B. zur Sprachauswahl). Tracking-Cookies setzen wir nur, wenn ausdrücklich aktiviert.</p>
-
-      <h2>5. Kontakt</h2>
-      <p>Wenn Sie uns kontaktieren, verarbeiten wir die mitgeteilten Daten zur Bearbeitung der Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b/f DSGVO.</p>
-
-      <h2>6. Empfänger & Drittlandtransfer</h2>
-      <p>Technische Dienstleister (z. B. Hosting) können Empfänger sein. Eine Übermittlung in Drittländer kann erfolgen, sofern dies zur Leistungserbringung erforderlich ist (z. B. CDN). Wir achten auf geeignete Garantien (Art. 46 DSGVO), soweit anwendbar.</p>
-
-      <h2>7. Speicherdauer</h2>
-      <p>Daten löschen wir, sobald der Zweck entfällt und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
-
-      <h2>8. Rechte der Betroffenen</h2>
-      <ul>
-        <li>Auskunft (Art. 15 DSGVO)</li>
-        <li>Berichtigung (Art. 16 DSGVO)</li>
-        <li>Löschung (Art. 17 DSGVO)</li>
-        <li>Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
-        <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
-        <li>Widerspruch (Art. 21 DSGVO)</li>
-        <li>Beschwerderecht bei einer Aufsichtsbehörde</li>
-      </ul>
-
-      <h2>9. Analyse/Tracking (optional)</h2>
-      <p>Sofern aktiviert, setzen wir eine datenschutzfreundliche Webanalyse (z. B. Umami/PostHog) ein, um aggregierte Nutzungsdaten auszuwerten. Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO; IP-Adressen werden gekürzt/anonymisiert, soweit möglich.</p>
-
-      <h2>10. Änderungen</h2>
-      <p>Wir passen diese Datenschutzhinweise an, wenn dies erforderlich ist.</p>
-
-      <p className="text-sm text-slate-400">Stand: 14.09.2025</p>
-    </section>
-  )
+ const { lang } = useLanguage(); const de = lang === 'de'
+ const sections = de ? [
+ ['Konto und Ausgaben', 'Für dein Konto speichern wir deine E-Mail-Adresse, optional deinen Namen und einen gesicherten Passwort-Hash. Ausgaben enthalten Datum, Betrag, Beschreibung und Kategorie. Diese Daten werden zur Bereitstellung deines Kontos und der Vergleichsfunktion verarbeitet (Art. 6 Abs. 1 lit. b DSGVO).'],
+ ['Hosting und Dienstleister', 'Die Website wird auf Vercel betrieben. Konten und Ausgaben liegen in einer Neon-Postgres-Datenbank in Frankfurt. Die Hosting-Dienstleister verarbeiten technische Verbindungsdaten und Protokolle für Betrieb, Sicherheit und Fehlerdiagnose. Bei der weltweiten Auslieferung der Website können Daten außerhalb der EU verarbeitet werden.'],
+ ['Cookies und Browser-Einstellungen', 'Notwendige Sitzungscookies ermöglichen die Anmeldung. Sprache und Anzeigewährung werden lokal im Browser gespeichert. Die eigene Traffic-Statistik verwendet keine Tracking-Cookies und keine Besucherkennung im Browser-Speicher.'],
+ ['Traffic-Statistik', 'Wir zählen Seitenaufrufe und schätzen tägliche Besucher, um die Nutzung der Website zu verstehen (Art. 6 Abs. 1 lit. f DSGVO). Der Server bildet aus IP-Adresse und Browserkennung einen täglich wechselnden, kryptografisch geschützten Wert. Die Statistik speichert weder die rohe IP-Adresse noch die Browserkennung. Diese Werte sind pseudonym, nicht garantiert anonym. Sie laufen nach 48 Stunden ab und werden beim nächsten täglichen Wartungslauf gelöscht. Aggregierte Tages- und Seitenzahlen werden bis zu 90 Tage gespeichert und beim nächsten Wartungslauf entfernt. Suchparameter, Ausgaben, E-Mail-Adressen und Referrer werden nicht in der Statistik erfasst. Bekannte Bots und angemeldete Administratoren werden ausgeschlossen. Do Not Track und Global Privacy Control deaktivieren die Erfassung.'],
+ ['Marktdaten', 'Historische Kurse werden über Yahoo Finance, Wechselkurse über Frankfurter abgerufen. Übermittelt werden Instrumente und Zeiträume, nicht deine Ausgabenbeschreibungen oder deine E-Mail-Adresse.'],
+ ['Kontakt und Speicherdauer', 'Wenn du uns kontaktierst, verwenden wir deine Angaben zur Bearbeitung der Anfrage. Kontodaten bleiben bis zur Kontolöschung gespeichert, soweit keine gesetzlichen Aufbewahrungspflichten entgegenstehen. Technische Protokolle und Backups unterliegen zusätzlich den Aufbewahrungsprozessen der jeweiligen Dienstleister.'],
+ ['Deine Rechte', 'Du kannst Ausgaben im Dashboard exportieren und dein Konto mit den zugehörigen Ausgaben in den Kontoeinstellungen löschen. Nach den gesetzlichen Voraussetzungen hast du Rechte auf Auskunft, Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit und Widerspruch sowie das Recht, dich bei einer Datenschutzaufsichtsbehörde zu beschweren. Für Anfragen und Widersprüche kontaktiere contact@mirrormoney.com.']
+ ] : [
+ ['Account and spending', 'We store your email address, optional name and a securely hashed password. Spending entries contain a date, amount, description and category. We process these records to provide your account and comparisons (GDPR Article 6(1)(b)).'],
+ ['Hosting and service providers', 'Vercel hosts the website. Accounts and spending are stored in a Neon Postgres database in Frankfurt. Hosting providers process technical connection data and logs for operation, security and troubleshooting. Global website delivery may involve processing outside the EU.'],
+ ['Cookies and browser preferences', 'Necessary session cookies support sign-in. Language and display currency are stored locally in your browser. Our traffic statistics use no tracking cookies or visitor identifier in browser storage.'],
+ ['Traffic statistics', 'We count page views and estimate daily visitors to understand website usage (GDPR Article 6(1)(f)). The server derives a cryptographically protected value from the IP address and browser user agent, changing it each day. Analytics does not store the raw IP address or user agent. These identifiers are pseudonymous, not guaranteed anonymous. They expire after 48 hours and are deleted during the next daily maintenance run. Aggregated day and page counts are kept for up to 90 days and removed at the next maintenance run. Query strings, spending, email addresses and referrers are not collected in analytics. Known bots and signed-in administrators are excluded. Do Not Track and Global Privacy Control disable collection.'],
+ ['Market data', 'Historical prices are requested from Yahoo Finance and exchange rates from Frankfurter. These requests contain instruments and date ranges, not your spending descriptions or email address.'],
+ ['Contact and retention', 'If you contact us, we use the information you provide to respond. Account records remain until account deletion, unless legal retention obligations apply. Technical logs and backups are also subject to the respective service providers’ retention processes.'],
+ ['Your rights', 'You can export spending from the dashboard and delete your account and its spending in account settings. Subject to applicable law, you have rights to access, correction, erasure, restriction, portability and objection, and to complain to a data protection authority. Contact contact@mirrormoney.com for requests or objections.']
+ ]
+ return <section className="container py-16 prose prose-invert max-w-none"><h1>{de ? 'Datenschutzhinweise' : 'Privacy notice'}</h1><h2>{de ? 'Verantwortlicher / Kontakt' : 'Controller / contact'}</h2><p>MirrorMoney<br/><a href="mailto:contact@mirrormoney.com">contact@mirrormoney.com</a></p>{sections.map(([title,text]) => <div key={title}><h2>{title}</h2><p>{text}</p></div>)}<p className="text-sm text-slate-400">{de ? 'Stand' : 'Last updated'}: 16.09.2026</p></section>
 }

@@ -10,6 +10,9 @@ export async function GET(request: Request) {
   await prisma.rateLimit.deleteMany({ where: { expiresAt: { lt: new Date() } } })
   await prisma.verificationToken.deleteMany({ where: { expires: { lt: new Date() } } })
   await prisma.marketCache.deleteMany({ where: { fetchedAt: { lt: new Date(Date.now() - 30 * 86400000) } } })
+  await prisma.$executeRaw`DELETE FROM "TrafficVisitor" WHERE "expiresAt" < now()`
+  const cutoff = new Date(Date.now() - 90 * 86400000).toISOString().slice(0,10)
+  await prisma.$executeRaw`DELETE FROM "TrafficDay" WHERE "day" < ${cutoff}`
   const failed = results.filter(r => r.status === 'rejected').length
   return NextResponse.json({ refreshed: results.length - failed, failed }, { status: failed ? 503 : 200 })
 }
