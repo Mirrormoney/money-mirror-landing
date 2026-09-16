@@ -5,7 +5,7 @@ export default function Impressum() {
  return <section className="container py-16 prose prose-invert max-w-none">
  <h1>{de ? 'Impressum' : 'Legal notice'}</h1>
  <h2>{de ? 'Dienstanbieter' : 'Service provider'}</h2>
- <p><strong>{de ? 'Name/Firma' : 'Name/company'}:</strong> MirrorMoney<br/><strong>E-Mail:</strong> <a href="mailto:contact@mirrormoney.com">contact@mirrormoney.com</a></p>
+ <p><strong>{de ? 'Name/Firma' : 'Name/company'}:</strong> MirrorMoney<br/><strong>E-Mail:</strong> <a href="mailto:contact@mirror-money.com">contact@mirror-money.com</a></p>
  <h2>{de ? 'Haftung für Inhalte' : 'Responsibility for content'}</h2>
  <p>{de ? 'Wir sind für eigene Inhalte nach den allgemeinen Gesetzen verantwortlich. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben unberührt.' : 'We are responsible for our own content under applicable law. Legal obligations to remove information or restrict its use remain unaffected.'}</p>
  <h2>{de ? 'Haftung für Links' : 'External links'}</h2>

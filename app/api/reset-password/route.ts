@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       })
       return NextResponse.json({ ok: true })
     }
-    if (!process.env.EMAIL_SERVER || !process.env.EMAIL_FROM || !process.env.NEXTAUTH_URL) throw new ApiError('Email recovery is not available yet. Please contact contact@mirrormoney.com for help.', 503)
+    if (!process.env.EMAIL_SERVER || !process.env.EMAIL_FROM || !process.env.NEXTAUTH_URL) throw new ApiError('Email recovery is not available yet. Please contact contact@mirror-money.com for help.', 503)
     const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) throw new ApiError('Enter a valid email address.')
     await limit(`reset-email:${email}`, 3, 3600)

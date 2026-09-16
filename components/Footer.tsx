@@ -11,7 +11,7 @@ export default function Footer() {
           <a href="/impressum" className="hover:text-white">{t('impressum')}</a>
           <a href="/datenschutz" className="hover:text-white">{t('datenschutz')}</a>
           <a href="/anlageberatung" className="hover:text-white">{t('disclaimer')}</a>
-          <a href="mailto:contact@mirrormoney.com" className="hover:text-white">{t('contact')}</a>
+          <a href="mailto:contact@mirror-money.com" className="hover:text-white">{t('contact')}</a>
         </div>
       </div>
     </footer>
